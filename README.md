@@ -65,9 +65,9 @@
 
 ## التشغيل ⚙️
 
-1. قم بتثبيت المتطلبات (يدعم `google-genai` الحديث أو `google-generativeai`):
+1. قم بتثبيت المتطلبات:
    ```bash
-   pip install pyrogram tgcrypto python-dotenv requests google-genai
+   pip install -r requirements.txt
    ```
 2. تأكد من إعداد ملف `.env`:
    ```env
