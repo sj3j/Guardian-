@@ -89,7 +89,7 @@ async def start_private(client, msg):
 
 
 @bot.on_message(
-    (filters.command(["help", "مساعدة"]) | filters.regex(r"^(?i)(help|مساعدة)$"))
+    (filters.command(["help", "مساعدة"]) | filters.regex(r"(?i)^(help|مساعدة)$"))
     & filters.private
 )
 async def help_private(client, msg):
