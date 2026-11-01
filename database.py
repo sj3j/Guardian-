@@ -171,7 +171,15 @@ def init_db(db_path=None):
         conn.commit()
 
 
+# In-memory cache for chat locks to avoid reading from disk on every single message
+_locks_cache = {}
+
+
 def get_chat_locks(chat_id: int, db_path=None) -> dict:
+    cache_key = (db_path or DB_PATH, chat_id)
+    if cache_key in _locks_cache:
+        return _locks_cache[cache_key].copy()
+
     with get_connection(db_path) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM chat_locks WHERE chat_id = ?", (chat_id,))
@@ -185,13 +193,18 @@ def get_chat_locks(chat_id: int, db_path=None) -> dict:
                 (chat_id,),
             )
             conn.commit()
-            return {k: False for k in LOCK_COLUMNS}
-        return {k: bool(row[k]) for k in LOCK_COLUMNS}
+            result = {k: False for k in LOCK_COLUMNS}
+        else:
+            result = {k: bool(row[k]) for k in LOCK_COLUMNS}
+
+        _locks_cache[cache_key] = result.copy()
+        return result
 
 
 def set_chat_lock(chat_id: int, lock_name: str, status: bool, db_path=None) -> bool:
     if lock_name not in LOCK_COLUMNS:
         return False
+    cache_key = (db_path or DB_PATH, chat_id)
     with get_connection(db_path) as conn:
         cursor = conn.cursor()
         # Ensure row exists
@@ -201,10 +214,13 @@ def set_chat_lock(chat_id: int, lock_name: str, status: bool, db_path=None) -> b
             (1 if status else 0, chat_id),
         )
         conn.commit()
+        if cache_key in _locks_cache:
+            _locks_cache[cache_key][lock_name] = bool(status)
         return True
 
 
 def set_all_chat_locks(chat_id: int, status: bool, db_path=None):
+    cache_key = (db_path or DB_PATH, chat_id)
     with get_connection(db_path) as conn:
         cursor = conn.cursor()
         get_chat_locks(chat_id, db_path)
@@ -216,6 +232,7 @@ def set_all_chat_locks(chat_id: int, status: bool, db_path=None):
             params,
         )
         conn.commit()
+        _locks_cache[cache_key] = {k: bool(status) for k in LOCK_COLUMNS}
 
 
 def save_muted_member(chat_id: int, user_id: int, name: str, until_date, db_path=None):

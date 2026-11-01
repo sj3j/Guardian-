@@ -388,6 +388,12 @@ async def handle_group_message(client, msg):
 
     # If message passed locks, check text for bad words & AI calls
     if text:
+        # Fast path: If the message addresses Nightmare bot directly, skip badwords check and respond
+        clean_lower = text.lower()
+        if any(w in clean_lower for w in ["nightmare", "nite", "night", "nighty", "نايت", "نايتي", "نايتمير"]):
+            await check_nightmarecall(client, msg, text)
+            return
+
         isbadword = await check_badwords(client, msg, text)
         if "True" in isbadword:
             try:
@@ -414,8 +420,6 @@ async def handle_group_message(client, msg):
             except Exception:
                 pass
             RegBotinfo(msg)
-        else:
-            await check_nightmarecall(client, msg, text)
 
 
 if __name__ == "__main__":
