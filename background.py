@@ -179,12 +179,18 @@ def _call_gemini_sync(prompt: str, system_instruction: str, temperature: float =
     return ""
 
 
-# Nightmare calls check <--------------------------------
+# Bot calls check <--------------------------------
 
-nightmare = ["nightmare", "nite", "night", "nighty", "نايت", "نايتي", "نايتمير"]
+bot_triggers = [
+    "guardian", "غارديان", "جاردين", "حارس",
+    "nightmare", "nite", "night", "nighty", "نايت", "نايتي", "نايتمير"
+]
+
+# Backward compatibility alias
+nightmare = bot_triggers
 
 async def check_nightmarecall(client, message, text):
-    pattern = re.compile('|'.join(re.escape(word) for word in nightmare), re.IGNORECASE)
+    pattern = re.compile('|'.join(re.escape(word) for word in bot_triggers), re.IGNORECASE)
     if pattern.search(text):
         await process_text(client, message, text)
 
@@ -349,15 +355,15 @@ async def check_badwords(client, message, text: str) -> str:
         return "False"
 
 
-# AI Module (Nightmare Assistant) <--------------------------------
+# AI Module (Guardian Assistant) <--------------------------------
 
 async def process_text(client, message, text: str):
     """
-    Process conversation when user addresses Nightmare AI bot.
+    Process conversation when user addresses Guardian AI bot.
     Runs non-blocking in a separate thread and replies in Arabic.
     """
     system_instruction = (
-        "Your name is 'nightmare', you are a telegram chat bot, you are a gentleman and not so talkative. "
+        "Your name is 'Guardian', you are a polite, intelligent, and helpful Telegram chat bot developed by @sj3js. "
         "Keep in mind you speak to boys and girls, and you only speak in Arabic."
     )
 
@@ -372,19 +378,19 @@ async def process_text(client, message, text: str):
         if response_text:
             await message.reply(response_text)
         else:
-            await message.reply("أهلاً بك! أنا نايت في خدمتك 🤍")
+            await message.reply("أهلاً بك! أنا غارديان (Guardian) في خدمتك 🤍")
     except Exception:
         try:
-            await message.reply("أهلاً بك! أنا نايت في خدمتك 🤍")
+            await message.reply("أهلاً بك! أنا غارديان (Guardian) في خدمتك 🤍")
         except Exception:
             pass
 
 
 # Help Text Guide <--------------------------------
 
-HELP_TEXT = """✨ **دليل أوامر ومميزات بوت نايت (Guardian)** ✨
+HELP_TEXT = """✨ **دليل أوامر ومميزات بوت غارديان (Guardian)** ✨
 
-أنا بوت لحماية وإدارة المجموعات ومساعد ذكي مدعوم بنموذج Google Gemini 🛡️🤖
+أنا بوت لحماية وإدارة المجموعات ومساعد ذكي مدعوم بالذكاء الاصطناعي 🛡️🤖
 
 ━━━━━━━━━━━━━━━━━━━━━
 🛡️ **أوامر حماية وأقفال المجموعة** (للمشرفين):
@@ -404,12 +410,13 @@ HELP_TEXT = """✨ **دليل أوامر ومميزات بوت نايت (Guardia
 • `/Arise` : عرض قائمة الأعضاء المكتومين والمحظورين مع المدة المتبقية
 
 ━━━━━━━━━━━━━━━━━━━━━
-🤖 **ميزات الذكاء الاصطناعي (Gemini)**:
+🤖 **ميزات الذكاء الاصطناعي**:
 • **فلترة المحتوى المسيء**: فحص تلقائي للرسائل وحذف الألفاظ البذيئة وكتم الفاعل فوراً.
 • **المساعد الذكي**: نادي البوت باسمه وسيقوم بالرد عليك بذكاء وأدب!
-  - كلمات المناداة: `نايت`، `نايتي`، `nightmare`، `night`، `nite`
+  - كلمات المناداة: `غارديان`، `guardian`، `جاردين`
 
 ━━━━━━━━━━━━━━━━━━━━━
+👨‍💻 **المطور (Developer)**: @sj3js
 ℹ️ **لطلب المساعدة في أي وقت**:
 أرسل: `/help` أو `مساعدة` أو `help`
 """

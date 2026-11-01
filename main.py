@@ -43,7 +43,7 @@ try:
 except Exception:
     pass
 
-print("\n- Nightmare: Hi Fenix, I'm Night how can I help you today?\n")
+print("\n- Guardian: Hi, I'm Guardian how can I help you today?\n")
 
 bot = Client(
     "ai",
@@ -81,9 +81,10 @@ async def secret_command(client, message):
 @bot.on_message(filters.command("start") & filters.private)
 async def start_private(client, msg):
     await msg.reply(
-        "👋 **أهلاً بك في بوت نايت (Guardian)!**\n\n"
-        "أنا بوت حماية وإدارة المجموعات ومساعد ذكي مدعوم بنموذج Google Gemini 🛡️🤖\n\n"
-        "للاطلاع على جميع الأوامر ودليل الاستخدام، أرسل: `/help` أو `مساعدة`",
+        "👋 **أهلاً بك في بوت غارديان (Guardian)!**\n\n"
+        "أنا بوت حماية وإدارة المجموعات ومساعد ذكي مدعوم بأحدث تقنيات الذكاء الاصطناعي 🛡️🤖\n\n"
+        "للاطلاع على جميع الأوامر ودليل الاستخدام، أرسل: `/help` أو `مساعدة`\n\n"
+        "👨‍💻 **المطور**: @sj3js",
         disable_web_page_preview=True,
     )
 
@@ -98,7 +99,7 @@ async def help_private(client, msg):
 
 @bot.on_message(filters.command("start") & filters.group)
 async def start_group(client, msg):
-    await msg.reply("أهلاً، أنا نايت بوت ذكاء اصطناعي وحماية كروبات، \n\n- `BY: @sj3js`")
+    await msg.reply("أهلاً، أنا غارديان (Guardian) بوت ذكاء اصطناعي وحماية كروبات 🛡️🤖\n\n- `Developer: @sj3js`")
 
 
 @bot.on_message(filters.command(["help", "مساعدة"]) & filters.group)
@@ -388,9 +389,9 @@ async def handle_group_message(client, msg):
 
     # If message passed locks, check text for bad words & AI calls
     if text:
-        # Fast path: If the message addresses Nightmare bot directly, skip badwords check and respond
+        # Fast path: If the message addresses Guardian bot directly, skip badwords check and respond
         clean_lower = text.lower()
-        if any(w in clean_lower for w in ["nightmare", "nite", "night", "nighty", "نايت", "نايتي", "نايتمير"]):
+        if any(w in clean_lower for w in ["guardian", "غارديان", "جاردين", "حارس", "nightmare", "nite", "night", "nighty", "نايت", "نايتي", "نايتمير"]):
             await check_nightmarecall(client, msg, text)
             return
 
