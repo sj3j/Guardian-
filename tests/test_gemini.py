@@ -97,8 +97,8 @@ class TestGeminiIntegration(unittest.TestCase):
 
             # Test that process_text doesn't raise exception when API fails
             with patch("background._call_gemini_sync", return_value=""):
-                await background.process_text(dummy_client, dummy_msg, "نايت مرحبا")
-                dummy_msg.reply.assert_called_once_with("أهلاً بك! أنا نايت في خدمتك 🤍")
+                await background.process_text(dummy_client, dummy_msg, "غارديان مرحبا")
+                dummy_msg.reply.assert_called_once_with("أهلاً بك! أنا غارديان (Guardian) في خدمتك 🤍")
 
         asyncio.run(run_test())
 

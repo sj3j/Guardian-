@@ -27,9 +27,9 @@ load_dotenv()
 
 
 def get_configured_api_keys():
-    """Retrieve all valid, non-empty Gemini API keys from environment."""
+    """Retrieve all valid, non-empty AI API keys from environment."""
     keys = []
-    # Primary standard key (as documented in Google Gemini API Get Started)
+    # Primary standard key
     primary = os.getenv("GEMINI_API_KEY")
     if primary and primary.strip():
         keys.append(primary.strip())
@@ -73,7 +73,7 @@ api_keys = get_configured_api_keys()
 
 def _call_gemini_sync(prompt: str, system_instruction: str, temperature: float = 0.7, max_output_tokens: int = 100) -> str:
     """
-    Synchronous worker executing Gemini generation with automatic key failover,
+    Synchronous worker executing AI text generation with automatic key failover,
     supporting modern google-genai, legacy google-generativeai, and direct REST fallback.
     Free tier models are tried in order of speed and stability.
     """
@@ -314,7 +314,7 @@ _CONTAINS_LETTERS = re.compile(r"[\u0600-\u06FFa-zA-Z]")
 
 async def check_badwords(client, message, text: str) -> str:
     """
-    Check if a message contains offensive / bad words using Gemini AI.
+    Check if a message contains offensive / bad words using AI.
     Runs non-blocking in a separate thread. Returns 'True' or 'False'.
     CPU-optimized: skips short/symbol-only messages and caches clean phrases.
     """

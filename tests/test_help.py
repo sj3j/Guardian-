@@ -5,13 +5,17 @@ from database import LOCK_COLUMNS
 class TestHelp(unittest.TestCase):
     def test_help_text_content(self):
         self.assertTrue(len(HELP_TEXT) > 100)
-        # Check title and sections
-        self.assertIn("دليل أوامر ومميزات بوت نايت", HELP_TEXT)
+        # Check title, developer and sections
+        self.assertIn("دليل أوامر ومميزات بوت غارديان (Guardian)", HELP_TEXT)
         self.assertIn("أوامر حماية وأقفال المجموعة", HELP_TEXT)
         self.assertIn("أوامر الإشراف بالرد", HELP_TEXT)
-        self.assertIn("ميزات الذكاء الاصطناعي (Gemini)", HELP_TEXT)
+        self.assertIn("ميزات الذكاء الاصطناعي", HELP_TEXT)
+        self.assertIn("@sj3js", HELP_TEXT)
         self.assertIn("/help", HELP_TEXT)
         self.assertIn("مساعدة", HELP_TEXT)
+        # Ensure Gemini is NEVER mentioned
+        self.assertNotIn("Gemini", HELP_TEXT)
+        self.assertNotIn("جيميناي", HELP_TEXT)
 
     def test_help_contains_moderation_commands(self):
         moderation_cmds = ["كتم", "طرد", "رفع الكتم", "رفع الحظر", "/Arise"]
@@ -19,7 +23,7 @@ class TestHelp(unittest.TestCase):
             self.assertIn(cmd, HELP_TEXT)
 
     def test_help_contains_ai_triggers(self):
-        triggers = ["نايت", "نايتي", "nightmare"]
+        triggers = ["غارديان", "guardian", "جاردين"]
         for trigger in triggers:
             self.assertIn(trigger, HELP_TEXT)
 
